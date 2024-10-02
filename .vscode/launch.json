@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "curefill_flutter_application_1",
+            "cwd": "curefill_flutter_application_1",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "curefill_flutter_application_1 (profile mode)",
+            "cwd": "curefill_flutter_application_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "curefill_flutter_application_1 (release mode)",
+            "cwd": "curefill_flutter_application_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
