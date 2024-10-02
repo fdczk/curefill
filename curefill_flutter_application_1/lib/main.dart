@@ -102,11 +102,45 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           body: TabBarView(
             children: [
-              const Icon(Icons.chat), // temporary fillers for each tab's body
-              const Icon(Icons.water_drop),
+              // Chat tab displaying the three closest buildings
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Closest Refill Stations:",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "CIF - 0.5 miles away",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Union - 0.8 miles away",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Armory - 1.2 miles away",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ],
+              ),
+              const Icon(Icons.water_drop), // temporary fillers for each tab's body
               Scaffold(
-                // appBar: AppBar(
-                //   title: const Text('Sydney'), backgroundColor: Colors.green[700]),
                 body: gmaps.GoogleMap(
                   onMapCreated: _onMapCreated,
                   initialCameraPosition: gmaps.CameraPosition(
