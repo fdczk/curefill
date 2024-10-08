@@ -26,6 +26,10 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  bool _returnDark() {
+    return _isDarkMode;
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -55,6 +59,7 @@ class _MyAppState extends State<MyApp> {
       home: MyHomePage(
         title: 'CURefill',
         toggleTheme: _toggleTheme, // Pass the toggle function to the home page
+        returnDark: _returnDark,
       ),
     );
   }
@@ -63,7 +68,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.toggleTheme});
+  const MyHomePage({super.key, required this.title, required this.toggleTheme, required this.returnDark});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -76,6 +81,7 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
   final VoidCallback toggleTheme; // Add a toggleTheme callback
+  final bool Function() returnDark; 
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -164,19 +170,29 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Column(
                       children: [
-                        const Spacer(flex: 1),
+                        const Spacer(flex: 5),
+                        const Text (
+                          "25",
+                          style: TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)),
                         const Text (
                           "REFILL(S) TO GO",
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)
                         ),
-                        const Spacer(flex: 2),
+                        const Spacer(flex: 4),
+                        IconButton(
+                          icon: Image.asset(widget.returnDark()?'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
+                          iconSize: 1,
+                          onPressed: null,
+                        ),
+                        const Spacer(flex: 1),
+                        const Text ( // REMOVE const when making this changeable
+                          "You've refilled your bottle [13] times now. \n That's the equivalent of saving [25.3] bottles!",
+                          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                          textAlign: TextAlign.center,
+                        ),
+                        const Spacer(flex: 3),
                       ],
                     ),
-                    // IconButton(
-                    //   icon: Image.asset('curefill_flutter_application_1/assets/qrbutton_black.png.png'),
-                    //   iconSize: 50,
-                    //   onPressed: () {},
-                    // )
                   ],
                 )
               ),
