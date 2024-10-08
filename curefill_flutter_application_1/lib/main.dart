@@ -15,6 +15,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // Track the theme mode (light/dark)
   bool _isDarkMode = false;
+  int refillsCounted = 0;
+  int refillsLeft = 25;
+
 
   // Method to toggle between light and dark mode
   void _toggleTheme() {
@@ -27,14 +30,26 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // removes debug banner
       title: 'Flutter Demo',
       theme: _isDarkMode
-          ? ThemeData.dark().copyWith(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          ? ThemeData
+          .dark().copyWith(
+              colorScheme: ColorScheme.fromSeed (seedColor: const Color.fromRGBO(35, 31, 32, 1)).copyWith(
+                  primary: Color.fromRGBO(102, 70, 177, 1),
+                  secondary:  Color.fromRGBO(58, 28, 129, 0.5), // darker text for buttons
+                  surface: Color.fromRGBO(89, 206, 196, 1), // accent
+                  tertiary: Color.fromRGBO(246,246,248,1) // text 
+                ),
               useMaterial3: true,
             )
           : ThemeData.light().copyWith(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(246,246,248,100)).copyWith(
+                  primary: Color.fromRGBO(89, 206, 196, 1),
+                  secondary: Color.fromRGBO(24, 75, 129, 0.5), // darker text for buttons
+                  surface: Color.fromRGBO(254, 127, 45, 1), // accent
+                  tertiary: Color.fromRGBO(35, 31, 32, 1) // text 
+                ),
               useMaterial3: true,
             ),
       home: MyHomePage(
@@ -43,6 +58,8 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+
+  
 }
 
 class MyHomePage extends StatefulWidget {
@@ -87,8 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            title: const Text("CURefill"),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            title: Text("CURefill", 
+              style:TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 30, fontWeight: FontWeight.w500)),
           ),
           bottomNavigationBar: const BottomAppBar(
             child: TabBar(
@@ -139,7 +157,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              const Icon(Icons.water_drop), // temporary fillers for each tab's body
+              Scaffold(
+                body: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        const Spacer(flex: 1),
+                        const Text (
+                          "REFILL(S) TO GO",
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500)
+                        ),
+                        const Spacer(flex: 2),
+                      ],
+                    ),
+                    // IconButton(
+                    //   icon: Image.asset('curefill_flutter_application_1/assets/qrbutton_black.png.png'),
+                    //   iconSize: 50,
+                    //   onPressed: () {},
+                    // )
+                  ],
+                )
+              ),
+              // const Icon(Icons.water_drop), // temporary fillers for each tab's body
               Scaffold(
                 body: gmaps.GoogleMap(
                   onMapCreated: _onMapCreated,
