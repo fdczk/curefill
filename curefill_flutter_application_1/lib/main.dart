@@ -182,7 +182,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         IconButton(
                           icon: Image.asset(widget.returnDark()?'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
                           iconSize: 1,
-                          onPressed: null,
+                          onPressed: () => {
+                            debugPrint("The QR code has been clicked!"),
+                          },
                         ),
                         const Spacer(flex: 1),
                         const Text ( // REMOVE const when making this changeable
