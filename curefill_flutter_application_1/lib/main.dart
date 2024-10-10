@@ -17,6 +17,7 @@ class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
   int refillsCounted = 0;
   int refillsLeft = 25;
+  double bottleSize = 16.9; // Default bottle size in oz
 
   // Method to toggle between light and dark mode
   void _toggleTheme() {
@@ -61,11 +62,17 @@ class _MyAppState extends State<MyApp> {
         refillsCounted: refillsCounted,
         incrementRefills: () {
           setState(() {
-            refillsCounted++;
+            refillsCounted += (bottleSize / 16.9).round(); // Increment by ounces of bottle / 16.9
             refillsLeft--; // Decrement refillsLeft
           });
         },
-        refillsLeft: refillsLeft, // Pass the refillsLeft variable
+        refillsLeft: refillsLeft,
+        updateBottleSize: (size) {
+          setState(() {
+            bottleSize = size; // Update the bottle size
+          });
+        },
+        bottleSize: bottleSize, // Pass the bottleSize variable
       ),
     );
   }
@@ -79,7 +86,9 @@ class MyHomePage extends StatefulWidget {
     required this.returnDark,
     required this.refillsCounted,
     required this.incrementRefills,
-    required this.refillsLeft, // Add refillsLeft
+    required this.refillsLeft,
+    required this.updateBottleSize,
+    required this.bottleSize, // Add bottleSize
   });
 
   final String title;
@@ -87,7 +96,9 @@ class MyHomePage extends StatefulWidget {
   final bool Function() returnDark;
   final int refillsCounted;
   final VoidCallback incrementRefills;
-  final int refillsLeft; // Add this line
+  final int refillsLeft;
+  final Function(double) updateBottleSize; // Add this line
+  final double bottleSize; // Add this line
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -102,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onMapCreated(gmaps.GoogleMapController controller) {
     mapController = controller;
   }
+
+  final TextEditingController _bottleSizeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +201,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       const Spacer(flex: 1),
                       Text(
-                        "You've refilled your bottle [${widget.refillsCounted}] times now. \n That's the equivalent of saving [${widget.refillsCounted * 2}] bottles!",
+                        "You've refilled your bottle [${widget.refillsCounted}] times now. \n That's the equivalent of saving [${(widget.refillsCounted * widget.bottleSize / 16.9).toStringAsFixed(1)}] bottles!",
                         style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
                       ),
@@ -217,10 +230,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            Center(
-              child: ElevatedButton(
-                onPressed: widget.toggleTheme, // Toggle light/dark mode
-                child: const Text('Switch Light/Dark Mode'),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    controller: _bottleSizeController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Enter Bottle Size (oz)',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      double? size = double.tryParse(value);
+                      if (size != null) {
+                        widget.updateBottleSize(size);
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: widget.toggleTheme, // Toggle light/dark mode
+                    child: const Text('Switch Light/Dark Mode'),
+                  ),
+                ],
               ),
             ),
           ],
