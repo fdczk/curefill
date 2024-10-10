@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
+import 'package:flutter_web_qrcode_scanner/flutter_web_qrcode_scanner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -104,11 +105,25 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 5);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   late gmaps.GoogleMapController mapController;
 
   final gmaps.LatLng _center =
-      const gmaps.LatLng(40.112442053296135, -88.22833394110455);
+      const gmaps.LatLng(40.10594609467735, -88.22840093210742);
 
   void _onMapCreated(gmaps.GoogleMapController controller) {
     mapController = controller;
@@ -116,27 +131,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   final TextEditingController _bottleSizeController = TextEditingController();
 
+  String? _data;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: Text("CURefill",
               style: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 30, fontWeight: FontWeight.w500)),
         ),
-        bottomNavigationBar: const BottomAppBar(
+        bottomNavigationBar: BottomAppBar(
           child: TabBar(
-            tabs: [
+            controller: _tabController,
+            tabs: const [
               Tab(icon: Icon(Icons.chat)),
               Tab(icon: Icon(Icons.water_drop)),
+              Tab(icon: Icon(Icons.camera_alt_rounded)),
               Tab(icon: Icon(Icons.location_pin)),
               Tab(icon: Icon(Icons.settings))
             ],
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             // Chat tab displaying the three closest buildings
             Column(
@@ -197,6 +217,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () {
                           widget.incrementRefills(); // Call the increment function
                           debugPrint("The QR code has been clicked! New refillsCounted: ${widget.refillsCounted}");
+                          _tabController.index = 2;
                         },
                       ),
                       const Spacer(flex: 1),
@@ -211,20 +232,68 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               )
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _data == null
+                    ? Container()
+                    : Center(
+                        child: Text(
+                          _data!,
+                          style: const TextStyle(fontSize: 18, color: Colors.green),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                FlutterWebQrcodeScanner(
+                  cameraDirection: CameraDirection.back,
+                  onGetResult: (result) {
+                    setState(() {
+                      _data = result;
+                    });
+                  },
+                  stopOnFirstResult: true,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  onError: (error) {
+                    // print(error.message)
+                  },
+                  onPermissionDeniedError: () {
+                    //show alert dialog or something
+                  },
+                ),
+              ],
+            ),
             Scaffold(
               body: gmaps.GoogleMap(
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: gmaps.CameraPosition(
                   target: _center,
-                  zoom: 20.0,
+                  zoom: 17.0,
                 ),
                 markers: {
                   const gmaps.Marker(
-                    markerId: gmaps.MarkerId('CIF'),
-                    position: gmaps.LatLng(40.112442053296135, -88.22833394110455),
+                    markerId: gmaps.MarkerId('Gregory Hall'),
+                    position: gmaps.LatLng(40.10594609467735, -88.22840093210742),
                     infoWindow: gmaps.InfoWindow(
-                      title: "CIF",
-                      snippet: "Closest Refill Station: 3rd floor, north side",
+                      title: "Gregory Hall",
+                      snippet: "Closest Refill Station: 2nd floor, south side",
+                    ),
+                  ),
+                  const gmaps.Marker(
+                    markerId: gmaps.MarkerId('Smith Memorial Hall'),
+                    position: gmaps.LatLng(40.10599746075856, -88.22611080332402),
+                    infoWindow: gmaps.InfoWindow(
+                      title: "Smith Memorial Hall",
+                      snippet: "Closest Refill Station: Lower Level, west side",
+                    ),
+                  ),
+                  const gmaps.Marker(
+                    markerId: gmaps.MarkerId('Main Library'),
+                    position: gmaps.LatLng(40.10497991005055, -88.22832094361989),
+                    infoWindow: gmaps.InfoWindow(
+                      title: "Main Library",
+                      snippet: "Closest Refill Station: 1st floor, north side",
                     ),
                   )
                 },

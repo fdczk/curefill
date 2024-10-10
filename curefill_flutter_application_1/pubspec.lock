@@ -96,6 +96,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_qrcode_scanner:
+    dependency: "direct main"
+    description:
+      name: flutter_web_qrcode_scanner
+      sha256: a4fa2c7d2e6049cfe8400617417fb0efe63886656a2be0c7ee136d77bd17097b
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   google_maps:
     dependency: transitive
     description:
@@ -208,6 +216,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  mobile_scanner:
+    dependency: "direct main"
+    description:
+      name: mobile_scanner
+      sha256: "145500ef1cdaa569c26d626336048fd0b0a9d00014e69af67baf632295fd8b40"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.0"
+  native_qr:
+    dependency: "direct main"
+    description:
+      name: native_qr
+      sha256: "0928754b92305eb101a3359014a60ac5e90126534406b4dd6fb7550433978420"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   path:
     dependency: transitive
     description:
