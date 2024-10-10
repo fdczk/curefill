@@ -58,12 +58,14 @@ class _MyAppState extends State<MyApp> {
         title: 'CURefill',
         toggleTheme: _toggleTheme,
         returnDark: _returnDark,
-        refillsCounted: refillsCounted, // Pass the refillsCounted
+        refillsCounted: refillsCounted,
         incrementRefills: () {
           setState(() {
-            refillsCounted++; // Increment refillsCounted
+            refillsCounted++;
+            refillsLeft--; // Decrement refillsLeft
           });
         },
+        refillsLeft: refillsLeft, // Pass the refillsLeft variable
       ),
     );
   }
@@ -75,15 +77,17 @@ class MyHomePage extends StatefulWidget {
     required this.title,
     required this.toggleTheme,
     required this.returnDark,
-    required this.refillsCounted, // Add refillsCounted
-    required this.incrementRefills, // Add incrementRefills function
+    required this.refillsCounted,
+    required this.incrementRefills,
+    required this.refillsLeft, // Add refillsLeft
   });
 
   final String title;
   final VoidCallback toggleTheme;
   final bool Function() returnDark;
-  final int refillsCounted; // Add this line
-  final VoidCallback incrementRefills; // Add this line
+  final int refillsCounted;
+  final VoidCallback incrementRefills;
+  final int refillsLeft; // Add this line
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -166,9 +170,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   Column(
                     children: [
                       const Spacer(flex: 5),
-                      const Text(
-                        "25",
-                        style: TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)),
+                      Text(
+                        "${widget.refillsLeft}", // Update to show refillsLeft
+                        style: const TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)),
                       const Text(
                         "REFILL(S) TO GO",
                         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
