@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_web_qrcode_scanner/flutter_web_qrcode_scanner.dart';
+import 'package:gif_view/gif_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,13 @@ class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
   int refillsCounted = 0;
   int refillsLeft = 25;
+  bool popupVisible = false;
+  Widget popup = SizedBox.shrink();
+  List<String> facts = ["Placeholder: This is a fact about water bottles.", 
+    "Placeholder: Single-use water bottles release X chemical into the ocean.",
+    "Placeholder: Over 50% of whales don't even know what a water bottle is."];
   double bottleSize = 16.9; // Default bottle size in oz
+  
 
   // Method to toggle between light and dark mode
   void _toggleTheme() {
@@ -67,12 +74,74 @@ class _MyAppState extends State<MyApp> {
             refillsLeft--; // Decrement refillsLeft
           });
         },
+        
+        hidePopup: () {
+          setState(() {
+            popup = SizedBox.shrink();
+          });
+        },
+
+        createPopup: (List<String> passedFacts) {
+          setState(() {
+            popup = Stack (
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.asset(_isDarkMode ? 'assets/backgrounddark.jpg' : 'assets/backgroundlight.jpg', 
+                    scale: 2),
+                ),
+                Column(
+                  children: [
+                  Row(children: [
+                    IconButton(
+                        icon: Image.asset(_isDarkMode ? 'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
+                        iconSize: 7,
+                        onPressed: () {
+                          setState(() {
+                            popup = SizedBox.shrink(); // Hide the popup
+                          });
+                    })
+                  ],),
+                  Text(
+                    "Success!",
+                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "${refillsLeft - 1}", // Update to show refillsLeft
+                    style: const TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)
+                  ),
+                  const Text(
+                    "REMAINING",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                  ),
+                  // ClipRRect( // tried doing top gif but it does not work the way I want it to
+                  //   borderRadius: BorderRadius.circular(10.0),
+                  //   child: GifView.asset(
+                  //     'assets/curefill_top_2.gif',
+                  //     controller:  GifController(
+                  //       loop: false,
+                  //       onFinish: () { dispose(); },// do what ever you want when gif finished
+                  //     ),
+                  //     height: 450,
+                  //     width: 400,
+                  //   ),
+                  // )
+                  ])
+              ]
+            );
+          });
+        },
+        
         refillsLeft: refillsLeft,
+        facts: facts,
+        popup: popup,
         updateBottleSize: (size) {
           setState(() {
             bottleSize = size; // Update the bottle size
           });
         },
+        
         bottleSize: bottleSize, // Pass the bottleSize variable
       ),
     );
@@ -87,8 +156,12 @@ class MyHomePage extends StatefulWidget {
     required this.returnDark,
     required this.refillsCounted,
     required this.incrementRefills,
+    required this.createPopup,
+    required this.hidePopup,
     required this.refillsLeft,
     required this.updateBottleSize,
+    required this.popup,
+    required this.facts,
     required this.bottleSize, // Add bottleSize
   });
 
@@ -98,8 +171,12 @@ class MyHomePage extends StatefulWidget {
   final int refillsCounted;
   final VoidCallback incrementRefills;
   final int refillsLeft;
+  final List<String> facts;
+  final Function(List<String>) createPopup;
+  final Function() hidePopup;
   final Function(double) updateBottleSize; // Add this line
   final double bottleSize; // Add this line
+  final Widget popup; // (null essentially -- smallest box possible)
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -200,7 +277,9 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
+                  Stack (
+                  children: [
+                    Column(
                     children: [
                       const Spacer(flex: 5),
                       Text(
@@ -215,6 +294,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         icon: Image.asset(widget.returnDark() ? 'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
                         iconSize: 1,
                         onPressed: () {
+                          widget.createPopup(widget.facts);
                           widget.incrementRefills(); // Call the increment function
                           debugPrint("The QR code has been clicked! New refillsCounted: ${widget.refillsCounted}");
                           _tabController.index = 2;
@@ -228,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       const Spacer(flex: 3),
                     ],
-                  ),
+                  ), (widget.popup),]),
                 ],
               )
             ),
