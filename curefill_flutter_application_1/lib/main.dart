@@ -316,11 +316,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                 Text ("Matthew", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0.9)),
-                                Text ("[Matthew sent you a reminder to hydrate!]", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
-                              ])
-                            )
-                          ],
-                        )
+                                Text ("[Matthew sent you a reminder to hydrate!]", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))])),
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Image.asset("assets/notif.png"))
+                      ])
                     ),
                   )
                 ),
