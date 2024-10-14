@@ -83,53 +83,47 @@ class _MyAppState extends State<MyApp> {
 
         createPopup: (List<String> passedFacts) {
           setState(() {
-            popup = Stack (
-              children: [
-                ClipRRect(
+            popup = ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.asset(_isDarkMode ? 'assets/backgrounddark.jpg' : 'assets/backgroundlight.jpg', 
-                    scale: 2),
-                ),
-                Column(
-                  children: [
-                  Row(children: [
-                    IconButton(
-                        icon: Image.asset(_isDarkMode ? 'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
-                        iconSize: 7,
-                        onPressed: () {
-                          setState(() {
-                            popup = SizedBox.shrink(); // Hide the popup
-                          });
-                    })
-                  ],),
-                  Text(
-                    "Success!",
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    "${refillsLeft - 1}", // Update to show refillsLeft
-                    style: const TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)
-                  ),
-                  const Text(
-                    "REMAINING",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                  ),
-                  // ClipRRect( // tried doing top gif but it does not work the way I want it to
-                  //   borderRadius: BorderRadius.circular(10.0),
-                  //   child: GifView.asset(
-                  //     'assets/curefill_top_2.gif',
-                  //     controller:  GifController(
-                  //       loop: false,
-                  //       onFinish: () { dispose(); },// do what ever you want when gif finished
-                  //     ),
-                  //     height: 450,
-                  //     width: 400,
-                  //   ),
-                  // )
-                  ])
-              ]
-            );
+                  child: Stack (
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(_isDarkMode ? 'assets/backgrounddark.jpg' : 'assets/backgroundlight.jpg', scale: 2),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center, // vertical
+                        crossAxisAlignment: CrossAxisAlignment.center, // horizontal
+                        children: [
+                        Text(
+                          "Success!",
+                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          "${refillsLeft - 1}", // Update to show refillsLeft
+                          style: const TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)
+                        ),
+                        const Text(
+                          "REMAINING",
+                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                                popup = SizedBox.shrink(); // Hide the popup
+                              });
+                          },
+                          child: Text('Click Here to Close', 
+                            style: TextStyle(color: _isDarkMode ? Color.fromRGBO(246, 246, 248, 0.5) : Color.fromRGBO(35, 31, 32, 0.5), fontWeight: FontWeight.w500)),
+                          style: ButtonStyle(
+                            alignment: Alignment.center, // <-- had to set alignment
+                            padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                              EdgeInsets.zero, // <-- had to set padding to zero
+                            ),
+                          ),
+                        ),
+                    ])],
+                  )
+                );
           });
         },
         
