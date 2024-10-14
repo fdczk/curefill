@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                 alignment: Alignment.center,
                 children: [
 
-                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light2.png', scale: 5),
+                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light3.png', scale: 5),
                   Container(
                     constraints: BoxConstraints(
                       maxWidth: 300.0,
@@ -239,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.only(left: 30, top: 30),
                   child: Text(
                     "Closest Refill Stations:",
                     style: TextStyle(
@@ -249,36 +249,58 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.only(left: 30, top: 8),
                   child: Text(
                     "CIF - 0.5 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.only(left: 30, top: 8),
                   child: Text(
                     "Union - 0.8 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(12.00),
+                  padding: const EdgeInsets.only(left: 30, top: 8),
                   child: Text(
                     "Armory - 1.2 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
 
+                
                 // FRIENDS MENU
+                Spacer(flex: 1),
+                ClipRect(
+                  child: Container(
+                    alignment: Alignment.center,
+                    constraints: BoxConstraints(
+                      maxWidth: (MediaQuery.of(context).size).width,
+                      maxHeight: 4,
+                    ),
+                    color: Theme.of(context).colorScheme.primary,
+                  )
+                ),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.only(left: 30, top: 30),
+                  child: Text(
+                    "Friends:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 15),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(40.0), 
                     child: Container(
                       alignment: Alignment.center,
                       constraints: BoxConstraints(
-                        maxWidth: (MediaQuery.of(context).size).width,
+                        maxWidth: ((MediaQuery.of(context).size).width - 60),
                         maxHeight: 70,
                       ),
                       color: Theme.of(context).colorScheme.secondary,
@@ -286,12 +308,84 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         Row (
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('ClipRRect', style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Image.asset(widget.returnDark() ? "assets/user_dark.png" : "assets/user_light.png")),
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Column (
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                Text ("Matthew", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0.9)),
+                                Text ("[Matthew sent you a reminder to hydrate!]", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold))
+                              ])
+                            )
                           ],
                         )
                     ),
                   )
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 15),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40.0), 
+                    child: Container(
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        maxWidth: ((MediaQuery.of(context).size).width - 60),
+                        maxHeight: 70,
+                      ),
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: 
+                        Row (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Image.asset(widget.returnDark() ? "assets/user_dark.png" : "assets/user_light.png")),
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Column (
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                Text ("Aleks", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0.95)),
+                                Text ("[You sent Aleks a reminder to hydrate!]", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300))
+                              ])
+                            ),
+                          ],
+                        )
+                    ),
+                  )
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 15),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40.0), 
+                    child: Container(
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        maxWidth: ((MediaQuery.of(context).size).width - 60),
+                        maxHeight: 70,
+                      ),
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: 
+                        Row (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Image.asset(widget.returnDark() ? "assets/user_dark.png" : "assets/user_light.png")),
+                            Padding(padding: const EdgeInsets.all(12),
+                              child: Column (
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                Text ("Melissa", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 0.95)),
+                                Text ("Melissa: yeah no, i got lost in altgeld again lol", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w300))
+                              ]))
+                          ],
+                        )
+                    ),
+                  )
+                ),
+                Spacer(flex: 10),
               ],
             ),
             Scaffold(
