@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_web_qrcode_scanner/flutter_web_qrcode_scanner.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +19,13 @@ class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
   int refillsCounted = 0;
   int refillsLeft = 25;
+  bool popupVisible = false;
+  Widget popup = SizedBox.shrink();
+  List<String> facts = ["Placeholder: This is a fact about water bottles.", 
+    "Placeholder: Single-use water bottles release X chemical into the ocean.",
+    "Placeholder: Over 50% of whales don't even know what a water bottle is."];
   double bottleSize = 16.9; // Default bottle size in oz
+  
 
   // Method to toggle between light and dark mode
   void _toggleTheme() {
@@ -67,12 +74,71 @@ class _MyAppState extends State<MyApp> {
             refillsLeft--; // Decrement refillsLeft
           });
         },
+        
+        hidePopup: () {
+          setState(() {
+            popup = SizedBox.shrink();
+          });
+        },
+
+        pickFact: (List<String> factList) {
+
+        },
+
+        createPopup: () {
+          setState(() {
+            popup = ClipRRect(borderRadius: BorderRadius.circular(10.0), 
+              child: Stack (
+                alignment: Alignment.center,
+                children: [
+
+                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light.png', scale: 5),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: 300.0,
+                      minWidth: 30.0,
+                      maxHeight: 500
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // vertical
+                      crossAxisAlignment: CrossAxisAlignment.center, // horizontal
+                      children: [
+                        Text("Scan Successful!", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
+                        Flexible ( child: Text("[${(facts[(Random()).nextInt(facts.length)])}]", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
+                        )),
+                        Spacer(flex: 1),
+                        Text("${refillsCounted + 1}", style: const TextStyle(fontSize: 130, fontWeight: FontWeight.w900, height: 0.85)),
+                        Text("TOTAL REFILL(S)", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+                        Spacer(flex: 2),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                                popup = SizedBox.shrink(); // Hide the popup
+                              });
+                          },
+                          style: ButtonStyle(alignment: Alignment.center, padding: WidgetStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero,),
+                            backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(246, 246, 248, 0.45)),
+                          ),
+                          child: Text('    Click Here to Close    ', style: TextStyle(color: _isDarkMode ? Color.fromRGBO(246, 246, 248, 0.75) : Color.fromRGBO(35, 31, 32, 0.75), fontWeight: FontWeight.w500),),
+                        ),
+                      ]
+                    )
+                  )
+                ],
+              ),
+            );
+          });
+        },
+        
         refillsLeft: refillsLeft,
+        facts: facts,
+        popup: popup,
         updateBottleSize: (size) {
           setState(() {
             bottleSize = size; // Update the bottle size
           });
         },
+        
         bottleSize: bottleSize, // Pass the bottleSize variable
       ),
     );
@@ -87,8 +153,13 @@ class MyHomePage extends StatefulWidget {
     required this.returnDark,
     required this.refillsCounted,
     required this.incrementRefills,
+    required this.createPopup,
+    required this.hidePopup,
+    required this.pickFact,
     required this.refillsLeft,
     required this.updateBottleSize,
+    required this.popup,
+    required this.facts,
     required this.bottleSize, // Add bottleSize
   });
 
@@ -98,8 +169,13 @@ class MyHomePage extends StatefulWidget {
   final int refillsCounted;
   final VoidCallback incrementRefills;
   final int refillsLeft;
+  final List<String> facts;
+  final Function() createPopup;
+  final Function() hidePopup;
+  final Function(List<String>) pickFact;
   final Function(double) updateBottleSize; // Add this line
   final double bottleSize; // Add this line
+  final Widget popup; // (null essentially -- smallest box possible)
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -200,7 +276,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Column(
+                  Stack (
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
                     children: [
                       const Spacer(flex: 5),
                       Text(
@@ -215,6 +294,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         icon: Image.asset(widget.returnDark() ? 'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
                         iconSize: 1,
                         onPressed: () {
+                          widget.createPopup();
                           widget.incrementRefills(); // Call the increment function
                           debugPrint("The QR code has been clicked! New refillsCounted: ${widget.refillsCounted}");
                           _tabController.index = 2;
@@ -228,7 +308,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                       ),
                       const Spacer(flex: 3),
                     ],
-                  ),
+                  ), (widget.popup),]),
                 ],
               )
             ),
