@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
           : ThemeData.light().copyWith(
               colorScheme: ColorScheme.fromSeed(seedColor: Color.fromRGBO(246, 246, 248, 100)).copyWith(
                 primary: Color.fromRGBO(89, 206, 196, 1),
-                secondary: Color.fromRGBO(24, 75, 129, 0.5),
+                secondary: Color.fromRGBO(150, 227, 226, 0.482),
                 surface: Color.fromRGBO(254, 127, 45, 1),
                 tertiary: Color.fromRGBO(35, 31, 32, 1),
               ),
@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
                 alignment: Alignment.center,
                 children: [
 
-                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light.png', scale: 5),
+                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light2.png', scale: 5),
                   Container(
                     constraints: BoxConstraints(
                       maxWidth: 300.0,
@@ -239,7 +239,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Text(
                     "Closest Refill Stations:",
                     style: TextStyle(
@@ -249,25 +249,48 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Text(
                     "CIF - 0.5 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(12.0),
                   child: Text(
                     "Union - 0.8 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(12.00),
                   child: Text(
                     "Armory - 1.2 miles away",
                     style: TextStyle(fontSize: 18),
                   ),
+                ),
+
+                // FRIENDS MENU
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(40.0), 
+                    child: Container(
+                      alignment: Alignment.center,
+                      constraints: BoxConstraints(
+                        maxWidth: (MediaQuery.of(context).size).width,
+                        maxHeight: 70,
+                      ),
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: 
+                        Row (
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('ClipRRect', style: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+                          ],
+                        )
+                    ),
+                  )
                 ),
               ],
             ),
