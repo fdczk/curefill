@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' as gmaps;
 import 'package:flutter_web_qrcode_scanner/flutter_web_qrcode_scanner.dart';
-import 'package:gif_view/gif_view.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MyApp());
@@ -81,49 +81,52 @@ class _MyAppState extends State<MyApp> {
           });
         },
 
-        createPopup: (List<String> passedFacts) {
+        pickFact: (List<String> factList) {
+
+        },
+
+        createPopup: () {
           setState(() {
-            popup = ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Stack (
-                    alignment: Alignment.center,
-                    children: [
-                      Image.asset(_isDarkMode ? 'assets/backgrounddark.jpg' : 'assets/backgroundlight.jpg', scale: 2),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center, // vertical
-                        crossAxisAlignment: CrossAxisAlignment.center, // horizontal
-                        children: [
-                        Text(
-                          "Success!",
-                          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          "${refillsLeft - 1}", // Update to show refillsLeft
-                          style: const TextStyle(fontSize: 150, fontWeight: FontWeight.w800, height: 1)
-                        ),
-                        const Text(
-                          "REMAINING",
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                        ),
+            popup = ClipRRect(borderRadius: BorderRadius.circular(10.0), 
+              child: Stack (
+                alignment: Alignment.center,
+                children: [
+
+                  Image.asset(_isDarkMode ? 'assets/popup_dark.png' : 'assets/popup_light.png', scale: 5),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxWidth: 300.0,
+                      minWidth: 30.0,
+                      maxHeight: 500
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // vertical
+                      crossAxisAlignment: CrossAxisAlignment.center, // horizontal
+                      children: [
+                        Text("Scan Successful!", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
+                        Flexible ( child: Text("[${(facts[(Random()).nextInt(facts.length)])}]", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
+                        )),
+                        Spacer(flex: 1),
+                        Text("${refillsCounted + 1}", style: const TextStyle(fontSize: 130, fontWeight: FontWeight.w900, height: 0.85)),
+                        Text("TOTAL REFILL(S)", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
+                        Spacer(flex: 2),
                         TextButton(
                           onPressed: () {
                             setState(() {
                                 popup = SizedBox.shrink(); // Hide the popup
                               });
                           },
-                          child: Text('Click Here to Close', 
-                            style: TextStyle(color: _isDarkMode ? Color.fromRGBO(246, 246, 248, 0.5) : Color.fromRGBO(35, 31, 32, 0.5), fontWeight: FontWeight.w500)),
-                          style: ButtonStyle(
-                            alignment: Alignment.center, // <-- had to set alignment
-                            padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                              EdgeInsets.zero, // <-- had to set padding to zero
-                            ),
+                          style: ButtonStyle(alignment: Alignment.center, padding: WidgetStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.zero,),
+                            backgroundColor: WidgetStatePropertyAll(Color.fromRGBO(246, 246, 248, 0.45)),
                           ),
+                          child: Text('    Click Here to Close    ', style: TextStyle(color: _isDarkMode ? Color.fromRGBO(246, 246, 248, 0.75) : Color.fromRGBO(35, 31, 32, 0.75), fontWeight: FontWeight.w500),),
                         ),
-                    ])],
+                      ]
+                    )
                   )
-                );
+                ],
+              ),
+            );
           });
         },
         
@@ -152,6 +155,7 @@ class MyHomePage extends StatefulWidget {
     required this.incrementRefills,
     required this.createPopup,
     required this.hidePopup,
+    required this.pickFact,
     required this.refillsLeft,
     required this.updateBottleSize,
     required this.popup,
@@ -166,8 +170,9 @@ class MyHomePage extends StatefulWidget {
   final VoidCallback incrementRefills;
   final int refillsLeft;
   final List<String> facts;
-  final Function(List<String>) createPopup;
+  final Function() createPopup;
   final Function() hidePopup;
+  final Function(List<String>) pickFact;
   final Function(double) updateBottleSize; // Add this line
   final double bottleSize; // Add this line
   final Widget popup; // (null essentially -- smallest box possible)
@@ -272,6 +277,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Stack (
+                  alignment: Alignment.center,
                   children: [
                     Column(
                     children: [
@@ -288,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                         icon: Image.asset(widget.returnDark() ? 'assets/qrbutton_purple2.png' : 'assets/qrbutton_blue2.png', scale: 7),
                         iconSize: 1,
                         onPressed: () {
-                          widget.createPopup(widget.facts);
+                          widget.createPopup();
                           widget.incrementRefills(); // Call the increment function
                           debugPrint("The QR code has been clicked! New refillsCounted: ${widget.refillsCounted}");
                           _tabController.index = 2;
