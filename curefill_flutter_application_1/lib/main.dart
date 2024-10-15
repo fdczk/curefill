@@ -21,9 +21,14 @@ class _MyAppState extends State<MyApp> {
   int refillsLeft = 25;
   bool popupVisible = false;
   Widget popup = SizedBox.shrink();
-  List<String> facts = ["Placeholder: This is a fact about water bottles.", 
-    "Placeholder: Single-use water bottles release X chemical into the ocean.",
-    "Placeholder: Over 50% of whales don't even know what a water bottle is."];
+  List<String> facts = [
+    "Each day, people in the U.S. throw away more than 60 million plastic water bottles (Seas & Straws)", 
+    "Plastic water bottles take 450 years to decompose (Seas & Straws)",
+    "80% of the plastic water bottles people buy end up in landfills (Seas & Straws)",
+    "It takes three times the volume of water to manufacture one bottle of water than it does to fill it (National Library of Medicine)",
+    "It's estimated that the world's oceans will contain more plastic than fish by 2050 (Shop Without Plastic)",
+    // "Making bottles to meet Americans' demand for bottled water requires more than 17 million barrels of oil annually, enough to fuel more than 1 million U.S. cars for a year (Shop Without Plastic)", // Too long
+    ];
   double bottleSize = 16.9; // Default bottle size in oz
   
 
@@ -104,12 +109,12 @@ class _MyAppState extends State<MyApp> {
                       crossAxisAlignment: CrossAxisAlignment.center, // horizontal
                       children: [
                         Text("Scan Successful!", style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w500), textAlign: TextAlign.center,),
-                        Flexible ( child: Text("[${(facts[(Random()).nextInt(facts.length)])}]", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
+                        Flexible ( child: Text("${(facts[(Random()).nextInt(facts.length)])}", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500), textAlign: TextAlign.center,
                         )),
                         Spacer(flex: 1),
                         Text("${refillsCounted + 1}", style: const TextStyle(fontSize: 130, fontWeight: FontWeight.w900, height: 0.85)),
                         Text("TOTAL REFILL(S)", style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)),
-                        Spacer(flex: 2),
+                        Spacer(flex: 1),
                         TextButton(
                           onPressed: () {
                             setState(() {
